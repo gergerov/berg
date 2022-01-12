@@ -1,4 +1,5 @@
 from django.db import models
+from berg.managers import UnitManager
 
 
 class Nutrient(models.Model):
@@ -63,3 +64,5 @@ class Unit(models.Model):
 
     def __str__(self) -> str:
         return f'{self.value}'
+
+    units = UnitManager()

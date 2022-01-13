@@ -4,7 +4,7 @@ from django.db import models
 class UnitManager(models.Manager):
 
   def all(self):
-    return self.get_queryset()
+    return self.get_queryset().order_by('unit_id')
 
 
 class NutrientManager(models.Manager):

@@ -7,3 +7,9 @@ class UnitSerializer(s.HyperlinkedModelSerializer):
   class Meta:
     model = Unit
     fields = ('unit_id', 'value', 'url', )
+
+
+class NutrientSerializer(s.HyperlinkedModelSerializer):
+  class Meta:
+    model = Nutrient
+    fields = ('nutrient_id', 'nutrient_name', 'status', 'url', )

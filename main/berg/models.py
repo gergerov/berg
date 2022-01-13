@@ -1,5 +1,5 @@
 from django.db import models
-from berg.managers import UnitManager
+from berg.managers import UnitManager, NutrientManager
 
 
 class Nutrient(models.Model):
@@ -12,6 +12,8 @@ class Nutrient(models.Model):
 
     def __str__(self) -> str:
         return f'{self.nutrient_name}'
+
+    nutrients = NutrientManager()
 
 
 class Product(models.Model):

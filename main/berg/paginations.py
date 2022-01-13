@@ -9,3 +9,8 @@ class UnitPagination(PageNumberPagination):
 class NutrientPagination(PageNumberPagination):
     page_size = 10
     max_page_size = 60
+
+
+class ProductPagination(PageNumberPagination):
+    page_size = 5
+    max_page_size = 30

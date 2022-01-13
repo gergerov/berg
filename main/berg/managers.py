@@ -14,3 +14,12 @@ class NutrientManager(models.Manager):
 
   def active(self):
     return self.all().filter(status=0)
+
+
+class ProductManager(models.Manager):
+
+  def all(self):
+    return self.get_queryset().order_by('product_name')
+
+  def active(self):
+    return self.all().filter(status=0)

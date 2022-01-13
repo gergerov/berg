@@ -1,9 +1,15 @@
 from django.shortcuts import render
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAdminUser
-from berg.serializers import (UnitSerializer, NutrientSerializer)
-from berg.models import (Unit, Nutrient)
-from berg.paginations import (UnitPagination, NutrientPagination)
+from berg.serializers import (
+  UnitSerializer, NutrientSerializer, ProductSerializer
+)
+from berg.models import (
+  Unit, Nutrient, Product
+)
+from berg.paginations import (
+  UnitPagination, NutrientPagination, ProductPagination
+)
 
 
 class UnitViewSet(ModelViewSet):
@@ -21,4 +27,13 @@ class NutrientViewSet(ModelViewSet):
   serializer_class = NutrientSerializer
   queryset = Nutrient.nutrients.all()
   pagination_class = NutrientPagination
+  permission_classes = [IsAdminUser]
+
+
+class ProductViewSet(ModelViewSet):
+  """Представление продуктов"""
+
+  serializer_class = ProductSerializer
+  queryset = Product.products.all()
+  pagination_class = ProductPagination
   permission_classes = [IsAdminUser]

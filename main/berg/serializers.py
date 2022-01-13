@@ -13,3 +13,9 @@ class NutrientSerializer(s.HyperlinkedModelSerializer):
   class Meta:
     model = Nutrient
     fields = ('nutrient_id', 'nutrient_name', 'status', 'url', )
+
+
+class ProductSerializer(s.HyperlinkedModelSerializer):
+  class Meta:
+    model = Product
+    fields = ('product_id', 'product_name', 'status', 'url', )

@@ -1,6 +1,7 @@
 from django.db import models
 from berg.managers import (
-    UnitManager, NutrientManager, ProductManager
+    UnitManager, NutrientManager, 
+    ProductManager, ProductStructManager
 )
 
 
@@ -55,6 +56,8 @@ class ProductStruct(models.Model):
 
     def __str__(self) -> str:
         return f'{self.product} {self.nutrient} {self.quantity} {self.unit}'
+
+    product_structs = ProductStructManager()
 
 
 class Unit(models.Model):

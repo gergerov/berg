@@ -31,4 +31,5 @@ doc_urls = [
 urlpatterns = [
    path('admin/', admin.site.urls),
    path('api/v1/', include(berg_router.urls)),
+   path('api/v1/', include('berg.urls')),
 ] + doc_urls

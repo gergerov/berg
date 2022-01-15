@@ -39,6 +39,9 @@ class ProductStructQuerySet(models.QuerySet):
   def ordered(self):
     return self.order_by('product_struct_id')
 
+  def short(self):
+    return self.values('nutrient__nutrient_name', 'quantity', 'unit__value').distinct()
+
 
 class ProductStructManager(models.Manager):
 

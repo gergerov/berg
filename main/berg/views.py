@@ -43,6 +43,29 @@ class BergModelViewSet(ModelViewSet):
     return super().dispatch(request, *args, **kwargs)
 
 
+class BergRetrieveAPIView(generics.RetrieveAPIView):
+  """
+  Базовый класс RetriveAPIView приложения Berg
+  Задает права к представлению и методы аутентификации.
+  Распределяет тротлинг в зависимости от категории пользователя
+  (админу - одно, простому юзеру - другое) 
+  с помощью метода dispath.
+  """
+  authentication_classes = [
+    TokenAuthentication, 
+    BasicAuthentication, 
+    SessionAuthentication
+  ]
+  permission_classes = [BergModelPermission]
+
+  def dispatch(self, request, *args, **kwargs):
+    if request.user.is_superuser:
+      self.throttle_scope = 'berg-admin'
+    else:
+      self.throttle_scope = 'berg-user'
+    return super().dispatch(request, *args, **kwargs)
+
+
 class UnitViewSet(BergModelViewSet):
   """Представление единиц измерения"""
   serializer_class = UnitSerializer
@@ -66,23 +89,29 @@ class ProductViewSet(BergModelViewSet):
   search_fields = ['^product_name',]
 
 
-class ProductStructView(generics.RetrieveAPIView):
+class ProductStructView(BergRetrieveAPIView):
   """Представление состава продукта"""
   serializer_class = ProductStructSerializer
 
-  def get(self, request, product_id, *args, **kwargs):
-    queryset = ProductStruct.product_structs.by_product(product_id)
+  def get(self, request, *args, **kwargs):
+    queryset = self.get_queryset()
     serializer = self.serializer_class(queryset, many=True, context={'request': request})
     return Response(serializer.data, status=200)
 
+  def get_queryset(self):
+      return ProductStruct.product_structs.by_product(self.kwargs['product_id'])
 
-class ProductStructShortView(generics.RetrieveAPIView):
+
+class ProductStructShortView(BergRetrieveAPIView):
   """Представление состава продукта (краткий формат)"""
   serializer_class = ProductStructShortSerializer
 
-  def get(self, request, product_id, *args, **kwargs):
-    queryset = ProductStruct.product_structs.by_product(product_id).short()
+  def get(self, request, *args, **kwargs):
+    queryset = self.get_queryset()
     serializer = self.serializer_class(queryset, many=True)
     if len(queryset) == 0:
       return Response(status=404)
     return Response(serializer.data, status=200)
+
+  def get_queryset(self):
+    return ProductStruct.product_structs.by_product(self.kwargs['product_id']).short()

@@ -40,7 +40,6 @@ class BergModelViewSet(ModelViewSet):
       self.throttle_scope = 'berg-admin'
     else:
       self.throttle_scope = 'berg-user'
-    print(self.throttle_scope)
     return super().dispatch(request, *args, **kwargs)
 
 

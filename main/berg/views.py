@@ -1,5 +1,4 @@
 from rest_framework.viewsets import ModelViewSet, generics
-from rest_framework.permissions import IsAdminUser
 from rest_framework.authentication import (
   TokenAuthentication, 
   BasicAuthentication, 
@@ -18,42 +17,59 @@ from berg.paginations import (
   UnitPagination, NutrientPagination, ProductPagination
 )
 from berg.filters import ProductFilter
+from berg.permissions import BergModelPermission
 
 
-class UnitViewSet(ModelViewSet):
+class BergModelViewSet(ModelViewSet):
+  """
+  Базовый класс modelvieset приложения berg.
+  Задает права к представлению и методы аутентификации.
+  Распределяет тротлинг в зависимости от категории пользователя
+  (админу - одно, простому юзеру - другое) 
+  с помощью метода dispath.
+  """
+  authentication_classes = [
+    TokenAuthentication, 
+    BasicAuthentication, 
+    SessionAuthentication
+  ]
+  permission_classes = [BergModelPermission]
+
+  def dispatch(self, request, *args, **kwargs):
+    if request.user.is_superuser:
+      self.throttle_scope = 'berg-admin'
+    else:
+      self.throttle_scope = 'berg-user'
+    print(self.throttle_scope)
+    return super().dispatch(request, *args, **kwargs)
+
+
+class UnitViewSet(BergModelViewSet):
   """Представление единиц измерения"""
-  authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
   serializer_class = UnitSerializer
   queryset = Unit.units.all()
   pagination_class = UnitPagination
-  permission_classes = [IsAdminUser]
 
 
-class NutrientViewSet(ModelViewSet):
+class NutrientViewSet(BergModelViewSet):
   """Представление нутриентов"""
-  authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
   serializer_class = NutrientSerializer
   queryset = Nutrient.nutrients.all()
   pagination_class = NutrientPagination
-  permission_classes = [IsAdminUser]
 
 
-class ProductViewSet(ModelViewSet):
+class ProductViewSet(BergModelViewSet):
   """Представление продуктов. Search - поиск по названию."""
-  authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
   serializer_class = ProductSerializer
   queryset = Product.products.all()
   pagination_class = ProductPagination
-  permission_classes = [IsAdminUser]
   filter_backends = [ProductFilter]
   search_fields = ['^product_name',]
 
 
 class ProductStructView(generics.RetrieveAPIView):
   """Представление состава продукта"""
-  authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
   serializer_class = ProductStructSerializer
-  permission_classes = [IsAdminUser]
 
   def get(self, request, product_id, *args, **kwargs):
     queryset = ProductStruct.product_structs.by_product(product_id)
@@ -63,9 +79,7 @@ class ProductStructView(generics.RetrieveAPIView):
 
 class ProductStructShortView(generics.RetrieveAPIView):
   """Представление состава продукта (краткий формат)"""
-  authentication_classes = [SessionAuthentication, BasicAuthentication, TokenAuthentication]
   serializer_class = ProductStructShortSerializer
-  permission_classes = [IsAdminUser]
 
   def get(self, request, product_id, *args, **kwargs):
     queryset = ProductStruct.product_structs.by_product(product_id).short()

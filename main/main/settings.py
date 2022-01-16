@@ -49,6 +49,8 @@ REST_FRAMEWORK = {
     'DEFAULT_THROTTLE_RATES': {
         'registration': '2/minute',
         'get-token': '3/minute',
+        'berg-admin': '60/minute',
+        'berg-user': '5/minute'
     },
 
     'DEFAULT_AUTHENTICATION_CLASSES': [

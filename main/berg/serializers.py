@@ -1,4 +1,3 @@
-from django.db.models import fields
 from rest_framework import serializers as s
 from berg.models import Product, ProductStruct, Nutrient, Unit
 
@@ -34,3 +33,9 @@ class ProductStructShortSerializer(s.Serializer):
   quantity = s.DecimalField(max_digits=10, decimal_places=3)
   unit = s.CharField(source='unit__value')
 
+
+class TopProductByNutrientSerializer(s.Serializer):
+  product = s.CharField(source='product__product_name')
+  nutrient = s.CharField(source='nutrient__nutrient_name')
+  quantity = s.DecimalField(max_digits=10, decimal_places=3)
+  unit = s.CharField(source='unit__value')

@@ -8,7 +8,8 @@ from rest_framework.response import Response
 from berg.serializers import (
   UnitSerializer, NutrientSerializer, 
   ProductSerializer, ProductStructSerializer,
-  ProductStructShortSerializer
+  ProductStructShortSerializer,
+  TopProductByNutrientSerializer
 )
 from berg.models import (
   Unit, Nutrient, Product, ProductStruct
@@ -114,4 +115,37 @@ class ProductStructShortView(BergRetrieveAPIView):
     return Response(serializer.data, status=200)
 
   def get_queryset(self):
-    return ProductStruct.product_structs.by_product(self.kwargs['product_id']).short()
+    return ProductStruct.product_structs.by_product(
+      self.kwargs['product_id']
+    ).values(
+      'nutrient__nutrient_name', 
+      'quantity', 
+      'unit__value'
+    )
+
+
+class TopProductByNutrient(BergRetrieveAPIView):
+  """
+  Представления отражающее топ 
+  продуктов содержащих тот или иной нутриент
+  """
+  serializer_class = TopProductByNutrientSerializer
+
+  def get(self, request, *args, **kwargs):
+    queryset = self.get_queryset().values(
+      'nutrient__nutrient_name', 
+      'quantity', 
+      'unit__value', 
+      'product__product_name'
+    )
+
+    serializer = self.serializer_class(queryset, many=True)
+    if len(queryset) == 0:
+      return Response(status=404)
+    return Response(serializer.data, status=200)
+
+  def get_queryset(self):
+    return ProductStruct.product_structs.by_nutrient_quantity(
+      nutrient_id=self.kwargs['nutrient_id'], 
+      nums=self.kwargs['nums']
+    )

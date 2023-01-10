@@ -7,7 +7,7 @@ SECRET_KEY = "django-insecure-nz0_^u!@9)$76^tg5^$te+fb*nt%x)ekrnn)sej)an_s*5uj-p
 
 DEBUG = False
 
-ALLOWED_HOSTS = ['dctberg.pythonanywhere.com', '127.0.0.1']
+ALLOWED_HOSTS = ['dctberg.pythonanywhere.com', 'dctberg2023.pythonanywhere.com', '127.0.0.1', 'berg-ui.web.app']
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
     "django_filters",
+    "corsheaders",
 ]
 
 REST_FRAMEWORK = {
@@ -29,26 +30,61 @@ REST_FRAMEWORK = {
         "rest_framework.throttling.ScopedRateThrottle",
     ],
     "DEFAULT_THROTTLE_RATES": {
-        "registration": "2/minute",
-        "get-token": "3/minute",
-        "berg-admin": "60/minute",
-        "berg-user": "5/minute",
+        "registration": "30/minute",
+        "get-token": "30/minute",
+        "berg-admin": "600/minute",
+        "berg-user": "600/minute",
     },
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework.authentication.BasicAuthentication",
         "rest_framework.authentication.SessionAuthentication",
+        "rest_framework.authentication.TokenAuthentication",
     ],
 }
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+CORS_ALLOWED_ORIGINS = [
+    "http://berg-ui.web.app",
+    "https://berg-ui.web.app",
+    "http://localhost:4200",
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://berg-ui.web.app",
+    "https://berg-ui.web.app",
+    "http://localhost:4200",
+]
+
+CORS_ORIGIN_WHITELIST = (
+    "http://berg-ui.web.app",
+    "https://berg-ui.web.app",
+    "http://localhost:4200",
+)
+
+"""CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+    'authorization',
+]"""
+
+CORS_ALLOW_CREDENTIALS = True
 
 ROOT_URLCONF = "main.urls"
 
@@ -101,7 +137,7 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = "static/"
-STATICFILES_DIRS = ['', ]
+#STATICFILES_DIRS = ['/home/dctberg2023/berg/main/static', ]
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

@@ -5,9 +5,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = "django-insecure-nz0_^u!@9)$76^tg5^$te+fb*nt%x)ekrnn)sej)an_s*5uj-p"
 
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['dctberg.pythonanywhere.com', '127.0.0.1']
+ALLOWED_HOSTS = ['dctberg.pythonanywhere.com', '127.0.0.1', 'gergerov.pythonanywhere.com']
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -29,10 +29,10 @@ REST_FRAMEWORK = {
         "rest_framework.throttling.ScopedRateThrottle",
     ],
     "DEFAULT_THROTTLE_RATES": {
-        "registration": "2/minute",
-        "get-token": "3/minute",
+        "registration": "3/minute",
+        "get-token": "5/minute",
         "berg-admin": "60/minute",
-        "berg-user": "5/minute",
+        "berg-user": "10/minute",
     },
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework.authentication.BasicAuthentication",
@@ -92,7 +92,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = "RU"
 
 TIME_ZONE = "UTC"
 

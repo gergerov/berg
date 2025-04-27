@@ -18,8 +18,8 @@ class NutrientPagination(PageNumberPagination):
 
 
 class ProductPagination(PageNumberPagination):
-    page_size = 5
-    max_page_size = 30
+    page_size = 30
+    max_page_size = 150
     page_query_description = "Номер страницы"
     page_size_query_param = "page_size"
     page_size_query_description = "Размер страницы"

@@ -83,6 +83,13 @@ class NutrientViewSet(BergModelViewSet):
     pagination_class = NutrientPagination
 
 
+class NutrientAllViewSet(BergModelViewSet):
+    """Представление нутриентов"""
+
+    serializer_class = NutrientSerializer
+    queryset = Nutrient.nutrients.all()
+
+
 class ProductViewSet(BergModelViewSet):
     """Представление продуктов. Search - поиск по названию."""
 

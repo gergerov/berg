@@ -1,5 +1,10 @@
 from django.urls import path
-from berg.views import ProductStructView, ProductStructShortView, TopProductByNutrient
+from berg.views import (
+    ProductStructView, 
+    ProductStructShortView, 
+    TopProductByNutrient,
+    NutrientAllViewSet,
+)
 
 urlpatterns = [
     path(
@@ -16,5 +21,10 @@ urlpatterns = [
         "top_product_by_nutrient/<int:nutrient_id>/<int:nums>",
         view=TopProductByNutrient.as_view(),
         name="top-product-by-nutrient",
+    ),
+    path(
+        "nutrients/all",
+        view=NutrientAllViewSet.as_view({'get': 'list'}),
+        name="nutrients-all",
     ),
 ]
